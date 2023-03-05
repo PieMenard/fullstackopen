@@ -32,19 +32,18 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0);
-  //Make an array same length as anecdotes and will it with zeros
+  //Make an array same length as anecdotes and fill it with zeros
   const [votes,setVote] = useState(Array(anecdotes.length).fill(0));
-  console.log("votes reset");
 
   const Button = ({handleClick,text}) => (
     <button onClick={handleClick}>{text}</button>
   )
 
-  const randomButton = () => {
+  const clickNext = () => {
     setSelected(Math.floor(Math.random()*anecdotes.length));
   }
 
-  const voteButton = () => {
+  const clickVote = () => {
     const updatedVotes = [...votes];
     updatedVotes[selected] += 1; 
     setVote(updatedVotes);
@@ -52,12 +51,11 @@ const App = () => {
     console.log(votes);
   }
   
-  
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button handleClick={voteButton} text = "vote"/>
-      <Button handleClick={randomButton} text = "next anecdote"/>
+      <Button handleClick={clickVote} text = "vote"/>
+      <Button handleClick={clickNext} text = "next anecdote"/>
       <MostVoted anecdotes = {anecdotes} votes = {votes}/>
     </div>
   )
