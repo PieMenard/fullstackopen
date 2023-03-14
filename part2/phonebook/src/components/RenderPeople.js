@@ -1,6 +1,12 @@
-const RenderPeople = ({ filter,handleFilter }) => {
+import Person from "./Person";
+
+const RenderPeople = ({ people }) => {
     return (
-        <div>Filter by name <input value={filter} onChange={handleFilter} /> </div>
+        <div>
+        { people.map(person =>
+            <Person key={person.id} person={person} />
+        )}
+        </div>
     )
   }
   
