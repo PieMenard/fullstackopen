@@ -10,19 +10,16 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
 
   const [newFilter, setNewFilter] = useState('');
-
+  //a new array that is a copy of persons
+  const [personsToShow, setPersonsToShow] = useState(persons);
   useEffect(() => {
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
         setPersons(response.data);
-        setPersonsToShow(persons);
+        setPersonsToShow(response.data);
       })
   }, []);
-
-
-  //a new array that is a copy of persons
-  const [personsToShow, setPersonsToShow] = useState(persons);
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -33,17 +30,19 @@ const App = () => {
     }
   
     //check to see if person name added already exists and add data it doesn't
-    if (!persons.find( (person) => person.name === personObject.name)){
-      setPersons(persons.concat(personObject));
-      setPersonsToShow(persons.concat(personObject));
-      setNewName('');    
-      setNewNumber(''); 
+    if (!persons.find( (person) => person.name.toLowerCase() === personObject.name.toLowerCase())){
+      axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data));
+        setPersonsToShow(persons.concat(response.data)); 
+       })
     }
     else
       alert(`${newName} is already added to phonebook`);
-    console.log(persons);
-    console.log(personsToShow);
-
+    setNewName('');
+    setNewNumber('');
+    console.log("test");
   }
 
   const handleNameChange = (event) => {
@@ -69,7 +68,8 @@ const App = () => {
       <Filter filter = {newFilter} handleFilter = {handleFilterChange} />
       <h2>Add new</h2>
       <Form addPerson = {addPerson} 
-            person = {persons} 
+            newName = {newName}
+            newNumber = {newNumber} 
             handleName = {handleNameChange} 
             handleNumber = {handleNumberChange}/>
       <h2>Numbers</h2>
