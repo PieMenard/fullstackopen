@@ -24,6 +24,21 @@
       "name": "Moby Dick",
       "number": "12334",
       "id": 5
+    },
+    {
+      "name": "senator armstrong",
+      "number": "0-800-33-33",
+      "id": 6
+    },
+    {
+      "name": "Pierre",
+      "number": "0-988-755",
+      "id": 7
+    },
+    {
+      "name": "Thom Yorke",
+      "number": "0-800-33-34",
+      "id": 8
     }
   ]
 }

@@ -4,6 +4,8 @@ import Filter from './components/Filter'
 import Form from './components/Form'
 import RenderPeople from './components/RenderPeople'
 
+import personService from './services/persons'
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
@@ -13,13 +15,13 @@ const App = () => {
   //a new array that is a copy of persons
   const [personsToShow, setPersonsToShow] = useState(persons);
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
-        setPersonsToShow(response.data);
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons);
+        setPersonsToShow(initialPersons);
       })
-  }, []);
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -31,11 +33,11 @@ const App = () => {
   
     //check to see if person name added already exists and add data it doesn't
     if (!persons.find( (person) => person.name.toLowerCase() === personObject.name.toLowerCase())){
-      axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data));
-        setPersonsToShow(persons.concat(response.data)); 
+      personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
+        setPersonsToShow(persons.concat(returnedPerson)); 
        })
     }
     else
