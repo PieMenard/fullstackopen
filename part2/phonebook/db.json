@@ -16,29 +16,9 @@
       "id": 3
     },
     {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 4
-    },
-    {
       "name": "Moby Dick",
-      "number": "12334",
-      "id": 5
-    },
-    {
-      "name": "senator armstrong",
-      "number": "0-800-33-33",
-      "id": 6
-    },
-    {
-      "name": "Pierre",
-      "number": "0-988-755",
-      "id": 7
-    },
-    {
-      "name": "Thom Yorke",
-      "number": "0-800-33-34",
-      "id": 8
+      "number": "0-800-3333",
+      "id": 4
     }
   ]
 }

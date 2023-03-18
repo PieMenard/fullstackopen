@@ -1,10 +1,10 @@
 import Person from "./Person";
 
-const RenderPeople = ({ people }) => {
+const RenderPeople = ({ people, deletePerson }) => {
     return (
         <div>
         { people.map(person =>
-            <Person key={person.id} person={person} />
+            <Person key={person.id} person={person} deletePerson = {deletePerson}/>
         )}
         </div>
     )

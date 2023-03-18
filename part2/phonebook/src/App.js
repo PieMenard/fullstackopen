@@ -30,7 +30,6 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1,
     }
-  
     //check to see if person name added already exists and add data it doesn't
     if (!persons.find( (person) => person.name.toLowerCase() === personObject.name.toLowerCase())){
       personService
@@ -45,6 +44,20 @@ const App = () => {
     setNewName('');
     setNewNumber('');
     console.log("test");
+  }
+
+  const deletePerson = (id) => {
+    const name = persons[id-1].name;
+    console.log(name)
+    if (window.confirm(`Delete ${name}?`)) {
+    personService
+      .destroy(id)
+      .then(() => {
+        const updatedPersons = persons.filter((person) => person.id !== id);
+        setPersons(updatedPersons);
+        setPersonsToShow(updatedPersons); 
+       })
+    }
   }
 
   const handleNameChange = (event) => {
@@ -75,7 +88,7 @@ const App = () => {
             handleName = {handleNameChange} 
             handleNumber = {handleNumberChange}/>
       <h2>Numbers</h2>
-      <RenderPeople people = {personsToShow}/>
+      <RenderPeople people = {personsToShow} deletePerson = {deletePerson}/>
     </div>
   )
 }
