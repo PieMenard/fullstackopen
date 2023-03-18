@@ -40,15 +40,25 @@ const App = () => {
        })
     }
     else
-      alert(`${newName} is already added to phonebook`);
+    {
+      //check if new number is different from old number, ask to replace
+      if (!persons.find( (person) => person.number === personObject.number))
+      {
+        window.confirm(`${personObject.name} already exists, replace old number with new one?` );
+        {
+         updateNumber(personObject.id-1)
+        }
+      }
+      else
+        alert(`${newName} is already added to phonebook`);
+        
+    }
     setNewName('');
     setNewNumber('');
-    console.log("test");
   }
 
   const deletePerson = (id) => {
     const name = persons[id-1].name;
-    console.log(name)
     if (window.confirm(`Delete ${name}?`)) {
     personService
       .destroy(id)
@@ -58,6 +68,24 @@ const App = () => {
         setPersonsToShow(updatedPersons); 
        })
     }
+  }
+
+  const updateNumber = (id) => {
+    const person = persons.find(n => n.id === id);
+    const changedPerson = { ...person, number: newNumber};
+  
+    personService
+      .update(id, changedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+        setPersonsToShow(persons.map(person => person.id !== id ? person : returnedPerson))
+      })
+      .catch(error => {
+        alert(
+          `${person.name} was already deleted from server`
+        )
+        setPersons(persons.filter(n => n.id !== id));
+      })
   }
 
   const handleNameChange = (event) => {
@@ -72,10 +100,7 @@ const App = () => {
     const search = event.target.value;
     setNewFilter(search);
     setPersonsToShow (persons.filter( (person) => person.name.toLowerCase().includes(search)));
-    console.log(persons);
-    console.log(personsToShow);
   }
-
 
   return (
     <div>
