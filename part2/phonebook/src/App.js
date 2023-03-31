@@ -54,9 +54,7 @@ const App = () => {
       if (!persons.find( (person) => person.number === personObject.number))
       {
         window.confirm(`${personObject.name} already exists, replace old number with new one?` );
-        {
          updateNumber(personObject.id-1)
-        }
       }
       else
         {
