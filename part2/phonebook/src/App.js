@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import Form from './components/Form'
 import RenderPeople from './components/RenderPeople'
 
 import personService from './services/persons'
-
-import './style.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
