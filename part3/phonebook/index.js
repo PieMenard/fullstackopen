@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 app.use(cors());
+app.use(express.static('build'))
 
 //create custom morgan token for request.body
 morgan.token('body', (req) => JSON.stringify(req.body));
@@ -14,8 +15,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 //morgan tiny is a default token
 //app.use(morgan('tiny'));
 app.use(express.json());
-
-const PORT = 3001;
 
 let persons =   
     [
@@ -108,7 +107,7 @@ app.get('/info', (request, response) => {
   );
 })
 
-
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
 console.log(`Server running on port ${PORT}`)
 })
