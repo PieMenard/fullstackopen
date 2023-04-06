@@ -1,8 +1,11 @@
+require('dotenv').config()
+
 const express = require("express");
 const app = express();
 const morgan = require('morgan');
-
 const cors = require('cors');
+
+const Person = require('./models/person')
 
 app.use(cors());
 app.use(express.static('build'))
@@ -16,7 +19,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 //app.use(morgan('tiny'));
 app.use(express.json());
 
-
+/*
 //connecting backend to database
 const mongoose = require('mongoose')
 const password = process.argv[2];
@@ -40,7 +43,7 @@ personSchema.set('toJSON', {
     delete returnedObject._id
     delete returnedObject.__v
   }
-})
+})*/
 
 ////
 
@@ -105,6 +108,24 @@ app.post('/api/persons', (request, response) => {
   const body = request.body
 
   if (!body.name || !body.number) {
+    return response.status(400).json({ error: 'content missing' })
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+    id: generateId()
+
+  })
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+})
+
+/*app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (!body.name || !body.number) {
     return response.status(400).json({ 
       error: 'Error 400: content missing' 
     })
@@ -125,7 +146,7 @@ app.post('/api/persons', (request, response) => {
   persons = persons.concat(newPerson)
 
   response.json(newPerson)
-})
+})*/
 
 app.get('/info', (request, response) => {
   const id = request.params.id
