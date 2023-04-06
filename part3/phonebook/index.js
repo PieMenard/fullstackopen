@@ -16,6 +16,35 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 //app.use(morgan('tiny'));
 app.use(express.json());
 
+
+//connecting backend to database
+const mongoose = require('mongoose')
+const password = process.argv[2];
+
+const url =
+  `mongodb+srv://piemenard:${password}@fs-phonebook.b6cqw1z.mongodb.net/?retryWrites=true&w=majority`
+
+mongoose.set('strictQuery',false)
+mongoose.connect(url)
+
+const personSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+})
+
+const Person = mongoose.model('Person', personSchema)
+
+personSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+
+////
+
+
 let persons =   
     [
         { 
@@ -44,7 +73,9 @@ app.get('/', (request, response) => {
   response.send('<h1>phonebook</h1>')
 })
 app.get('/api/persons', (request, response) => {
-response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 //FETCH SINGLE PERSON
