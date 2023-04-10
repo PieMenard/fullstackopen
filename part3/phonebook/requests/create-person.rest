@@ -5,6 +5,6 @@ POST http://localhost:3001/api/persons/
 content-type: application/json
 
 {
-    "name": "God",
-    "number": "0-00-000"
+    "name": "King Kong",
+    "number": "1800-455-133"
 }
