@@ -105,7 +105,7 @@ const generateId = () => {
   return Math.floor(Math.random() * 100);
 }
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   if (!body.name || !body.number) {
@@ -115,7 +115,7 @@ app.post('/api/persons', (request, response) => {
   const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId()
+    //id: generateId()
 
   })
   person.save().then(savedPerson => {
@@ -123,31 +123,21 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
-/*app.post('/api/persons', (request, response) => {
-  const body = request.body
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body;
 
-  if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'Error 400: content missing' 
-    })
-  }
-
-  const newPerson = {
-    id: generateId(),
+  const person = {
     name: body.name,
     number: body.number,
-  }
+  };
 
-  if (persons.find((person) => person.name === body.name))
-  {
-    return response.status(400).json({ 
-      error: 'Error 400: that name already exists in the phonebook' 
+  Person.findByIdAndUdpate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      console.log(`updated ${updatedPerson.name}`);
+      response.json(updatedPerson);
     })
-  }
-  persons = persons.concat(newPerson)
-
-  response.json(newPerson)
-})*/
+    .catch((error) => next(error));
+});
 
 app.get('/info', (request, response) => {
   const id = request.params.id
