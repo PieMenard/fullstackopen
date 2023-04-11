@@ -31,7 +31,7 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      //id: persons.length + 1,
     }
     //check to see if person name added already exists and add data it doesn't
     if (!persons.find( (person) => person.name.toLowerCase() === personObject.name.toLowerCase())){
@@ -50,8 +50,10 @@ const App = () => {
       //check if new number is different from old number, ask to replace
       if (!persons.find( (person) => person.number === personObject.number))
       {
-        window.confirm(`${personObject.name} already exists, replace old number with new one?` );
-         updateNumber(personObject.id-1)
+        //make a person that is a duplicate of the person to be replaced
+        const person = persons.find(person => person.name === newName)
+        window.confirm(`${person.name} already exists, replace old number with new one? id:${person.id}` );
+        updateNumber(person.id)
       }
       else
         {

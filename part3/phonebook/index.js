@@ -7,6 +7,10 @@ const cors = require('cors');
 
 const Person = require('./models/person')
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
 app.use(cors());
 app.use(express.static('build'))
 
@@ -18,35 +22,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 //morgan tiny is a default token
 //app.use(morgan('tiny'));
 app.use(express.json());
-
-/*
-//connecting backend to database
-const mongoose = require('mongoose')
-const password = process.argv[2];
-
-const url =
-  `mongodb+srv://piemenard:${password}@fs-phonebook.b6cqw1z.mongodb.net/?retryWrites=true&w=majority`
-
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-const personSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-})
-
-const Person = mongoose.model('Person', personSchema)
-
-personSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
-})*/
-
-////
-
 
 let persons =   
     [
@@ -81,6 +56,22 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
+app.post('/api/persons', (request, response, next) => {
+  const body = request.body
+
+  if (!body.name || !body.number) {
+    return response.status(400).json({ error: 'content missing' })
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+})
+
 //FETCH SINGLE PERSON
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
@@ -95,49 +86,16 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
     .then(result => {
+
       response.status(204).end()
     })
     .catch(error => next(error))
 })
 
-const generateId = () => {
+/*const generateId = () => {
 
   return Math.floor(Math.random() * 100);
-}
-
-app.post('/api/persons', (request, response, next) => {
-  const body = request.body
-
-  if (!body.name || !body.number) {
-    return response.status(400).json({ error: 'content missing' })
-  }
-
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-    //id: generateId()
-
-  })
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
-})
-
-app.put('/api/persons/:id', (request, response, next) => {
-  const body = request.body;
-
-  const person = {
-    name: body.name,
-    number: body.number,
-  };
-
-  Person.findByIdAndUdpate(request.params.id, person, { new: true })
-    .then((updatedPerson) => {
-      console.log(`updated ${updatedPerson.name}`);
-      response.json(updatedPerson);
-    })
-    .catch((error) => next(error));
-});
+}*/
 
 app.get('/info', (request, response) => {
   const id = request.params.id
@@ -160,6 +118,23 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      console.log(`updated ${updatedPerson.name}`);
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
+});
+
+app.use(unknownEndpoint)
 // this has to be the last loaded middleware.
 app.use(errorHandler)
 
