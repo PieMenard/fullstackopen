@@ -40,10 +40,15 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
         setPersonsToShow(persons.concat(returnedPerson)); 
-       })
+        setNotification(`Added ${personObject.name}! `) ;
+        setTimeout(() => {setNotification(null)}, 5000);
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data.error);
+        setTimeout(() => {setErrorMessage(null)}, 5000);
+      });
 
-       setNotification(`Added ${personObject.name}! `) ;
-       setTimeout(() => {setNotification(null)}, 5000);
+       
     }
     else
     {
@@ -97,11 +102,10 @@ const App = () => {
         setNotification(`Updated ${person.name}'s number! `) ;
         setTimeout(() => {setNotification(null)}, 5000);
       })
-      .catch(error => {
-        setErrorMessage(`Information of ${person.name} has already been removed from server! `) ;
+      .catch((error) => {
+        setErrorMessage(error.response.data.error);
         setTimeout(() => {setErrorMessage(null)}, 5000);
-        setPersons(persons.filter(n => n.id !== id));
-      })
+      });
   }
 
   //STEP 11, NOTIFICATION FOR SUCCESFUL OPERATION
