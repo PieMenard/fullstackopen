@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "title",
-  "author": "author",
-  "url": "www.example.com",
-  "likes": 2
+  "title": "The Whiteness of the Whale  ",
+  "author": "Herman Melville ",
+  "url": "www.mobydick.com",
+  "likes": 123
 }
