@@ -34,19 +34,15 @@ const mostBlogs = (blogs) => {
 
 const mostLikes = (blogs) => {
   if (blogs.length === 0) return null;
-  const blogsLikes = lodash.groupBy(blogs,"likes");
-  console.log(`blogsLikes: ${blogsLikes}`);
-  const topAuthor = Object.keys(blogsLikes).reduce((a, b) => {
-    console.log(`topAuthor: ${blogsLikes}`);
-    console.log(`a: ${a}`);
-    console.log(`blogsLikes[a]: ${blogsLikes[a]}`);
-    console.log(`a: ${a}`);
-    console.log(`blogsLikes[b]: ${blogsLikes[b]}`);
-    return blogsLikes[a] > blogsLikes[b] ? a : b;
-  });
+  
+  const likesByAuthor = lodash.groupBy(blogs, 'author');
+  const totalLikesByAuthor = lodash.mapValues(likesByAuthor, blogs => lodash.sumBy(blogs, 'likes'));
+  const mostLikedAuthor = lodash.maxBy(lodash.keys(totalLikesByAuthor), author => totalLikesByAuthor[author]);
+  const totalLikes = totalLikesByAuthor[mostLikedAuthor];
+
   return {
-    author: topAuthor,
-    likes: authorsNumBlogs[topAuthor]
+    author: mostLikedAuthor,
+    likes: totalLikes
   }
 }
 
