@@ -18,7 +18,7 @@ module.exports = {
 		],
 		"linebreak-style": [
 			"error",
-			"dos"
+			"CR"
 		],
 		"quotes": [
 			"error",
