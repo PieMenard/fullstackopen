@@ -7,3 +7,6 @@ Content-Type: application/json
   "url": "www.mobydick.com",
   "likes": 123
 }
+
+###
+GET http://localhost:3003/api/blogs
