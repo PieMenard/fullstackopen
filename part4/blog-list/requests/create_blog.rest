@@ -1,11 +1,13 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsImlkIjoiNjQ1NjY2N2UyMmIwM2Y3YmY5NTczZGM1IiwiaWF0IjoxNjgzMzgzOTUyfQ.3sFnb2ccWsbzMM6peKlqtpm7qH5ahjEPA7vcLXyATtA
 
 {
-  "title": "Another test",
-  "author": "Test",
-  "url": "www.test.com",
-  "likes": 3
+  "title": "token auth test 2",
+  "author": "JRR Token",
+  "url": "www.jrr.com",
+  "likes": 222,
+  "userId": "6456669b22b03f7bf9573dc9"
 }
 
 ###
