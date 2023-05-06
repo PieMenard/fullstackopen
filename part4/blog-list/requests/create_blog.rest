@@ -2,10 +2,10 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "The Whiteness of the Whale  ",
-  "author": "Herman Melville ",
-  "url": "www.mobydick.com",
-  "likes": 123
+  "title": "Another test",
+  "author": "Test",
+  "url": "www.test.com",
+  "likes": 3
 }
 
 ###
