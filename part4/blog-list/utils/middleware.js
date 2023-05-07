@@ -13,15 +13,12 @@ const unknownEndpoint = (request, response) => {
 }
 
 const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('Authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    request.token = authorization.substring(7)
-    return 
-  }
-  next();
-};
-
-
+  const authorization = request.get('authorization')
+   if (authorization && authorization.startsWith('Bearer ')) {
+    request.token =  authorization.replace('Bearer ', '')
+   }
+  next()
+}
 
 const errorHandler = (error, request, ponseponse, next) => {
   logger.error(error.message)
