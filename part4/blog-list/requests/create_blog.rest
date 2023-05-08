@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsImlkIjoiNjQ1NjY2N2UyMmIwM2Y3YmY5NTczZGM1IiwiaWF0IjoxNjgzNTAwNzAwfQ.sbzJxLp11txw8ocZKV7BwjZh4Peut0ipeAksuGgVXOg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsImlkIjoiNjQ1NjY2N2UyMmIwM2Y3YmY5NTczZGM1IiwiaWF0IjoxNjgzNTA1MDU3fQ.K6uEYHmQVAkvnBCUE-YjjMvSFAlxjOUFho4gBjZgSSI
 
 {
-  "title": "DELETE TEST",
-  "author": "DEAD",
+  "title": "ANOTHER TEST",
+  "author": "MIKE",
   "url": "www.rip.com",
   "likes": 900,
   "userId": "6456667e22b03f7bf9573dc5"
