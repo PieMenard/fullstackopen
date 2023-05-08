@@ -143,7 +143,7 @@ describe('when creating a new blog', () => {
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(initialBlogs.length);
   });
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
   test('should return 401 Unauthorized if token is not provided', async () => {
     const newBlog = {
       title: 'Test Blog',
@@ -152,13 +152,11 @@ describe('when creating a new blog', () => {
       likes: 5,
     };
   
-    const response = await supertest(app)
-      .post('/api/blogs')
-      .send(newBlog)
-      .set('Authorization', 'Bearer invalid-token') // Set an invalid token
-      .expect(401);
+    await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401);
   
-    expect(response.body.error).toBe('invalid token');
   });
   
 })

@@ -2,7 +2,6 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-const middleware = require("../utils/middleware");
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -27,9 +26,13 @@ blogsRouter.post('/', async (request, response) => {
   const user = request.user
   const token = request.token
 
+  if (!user) {
+    return response.status(401).json({ error: "user doesn't exist in database" })
+  }
+
   const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+  if (!(token || decodedToken.id)) {
+    return response.status(401).json({ error: "token missing or invalid" });
   }
 
    const blog = new Blog({
