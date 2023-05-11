@@ -7,10 +7,8 @@ import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [notification, setNotification] = useState(null);
   const [user, setUser] = useState(null)
   
 
@@ -42,9 +40,10 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
+      setNotification(`Logging succesful! Hello ${user.name}! `) ;
+        setTimeout(() => {setNotification(null)}, 5000);
+      
+    } catch (error) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
@@ -65,16 +64,44 @@ const App = () => {
         url,
       })
       setBlogs(blogs.concat(blog))
+      setNotification(`Added a new blog: "${blog.title}" by "${blog.author}" `) ;
+        setTimeout(() => {setNotification(null)}, 5000);
     } catch (exception) {
       console.log('exception', exception)
+      setErrorMessage('Error dding new blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
   }
 
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null;
+    }
+    return (
+      <div className='notification'>
+        {message}
+      </div>
+    )
+  }
+
+  const ErrorMessage = ({ message }) => {
+    if (message === null) {
+      return null;
+    }
+    return (
+      <div className='error'>
+        {message}
+      </div>
+    )
+  }
 
   if (user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
+            <ErrorMessage message={errorMessage}/>
             <LoginForm handleLogin={handleLogin}/>
       </div>
     )
@@ -83,6 +110,8 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={notification} />
+      <ErrorMessage message={errorMessage}/>
       <p> 
         <span>{user.name} logged in</span>
         <button onClick={handleLogout}>logout</button>
