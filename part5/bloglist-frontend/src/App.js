@@ -110,7 +110,7 @@ const App = () => {
     )
   }
 
-  const updateBlog = async (id, updatedBlog) => {
+  const handleUpdateBlog = async (id, updatedBlog) => {
   try {
     const response = await blogService.update(id, updatedBlog);
 
@@ -121,6 +121,17 @@ const App = () => {
     setErrorMessage("error" + exception.response.data.error);
   }
 
+  }
+
+  const handleDeleteBlog = async (blog) => {
+    if (window.confirm(`Delete ${blog.title} by "${blog.author}" ?`)) {
+    await blogService.destroy(blog.id)
+    setNotification(`Deleted blog: "${blog.title}" by "${blog.author}" `) ;
+    setTimeout(() => {setNotification(null)}, 5000);  
+   
+    const updatedBlogs = blogs.filter((currentBlog) => currentBlog.id !== blog.id)
+    setBlogs(updatedBlogs);  
+    } 
   }
 
   const blogForm = () => (
@@ -142,7 +153,7 @@ const App = () => {
       <div> {blogForm()} </div>
       {blogs.sort((a, b) => b.likes - a.likes) // Sort the blogs array by likes in descending order
       .map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} loggedUser = {user} blog={blog} updateBlog={handleUpdateBlog} deleteBlog={handleDeleteBlog}/>
       )}
             
     </div>
