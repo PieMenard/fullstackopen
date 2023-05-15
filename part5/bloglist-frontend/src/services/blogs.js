@@ -20,6 +20,11 @@ const getAll = () => {
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
 }
+
+const update = async (id, newObject) => {
+  const response = await axios.put(`${baseUrl}/${id}`, newObject);
+  return response.data;
+}
   
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { create, getAll, setToken }
+export default { create, update, getAll, setToken }
