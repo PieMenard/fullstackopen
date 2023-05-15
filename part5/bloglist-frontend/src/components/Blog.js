@@ -4,8 +4,8 @@ const Blog = ({blog, loggedUser, updateBlog, deleteBlog}) => {
   const [visible, setVisible] = useState(false)
   
   const toggleVisibility = () => {
-    setVisible(!visible);
-  };
+    setVisible(!visible)
+  }
 
   const handleDelete = () => {
     
