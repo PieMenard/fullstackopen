@@ -10,15 +10,16 @@ import Togglable from './components/Togglable'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
-  const [notification, setNotification] = useState(null);
+  const [notification, setNotification] = useState(null)
   const [user, setUser] = useState(null)
+  const [refreshBlog, setRefreshBlog] = useState(false)
   const blogFormRef = useRef()
-  
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
-  }, [])
+    )
+  }, [refreshBlog])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -30,7 +31,7 @@ const App = () => {
   }, [])
 
   const handleLogin = async (username,password) => {
-        
+
     try {
       const user = await loginService.login({
         username, password,
@@ -38,13 +39,13 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
-      ) 
+      )
 
       blogService.setToken(user.token)
       setUser(user)
-      setNotification(`Logging succesful! Hello ${user.name}! `) ;
-        setTimeout(() => {setNotification(null)}, 5000);
-      
+      setNotification(`Logging succesful! Hello ${user.name}! `)
+      setTimeout(() => {setNotification(null)}, 5000)
+
     } catch (error) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
@@ -53,9 +54,9 @@ const App = () => {
     }
   }
 
-  const handleLogout = async (event) =>{
-    window.localStorage.clear();
-    setUser(null);
+  const handleLogout = async () => {
+    window.localStorage.clear()
+    setUser(null)
   }
 
   const handleAddBlog = async(title, author, url) => {
@@ -67,8 +68,9 @@ const App = () => {
       })
       setBlogs(blogs.concat(blog))
       blogFormRef.current.toggleVisibility()
-      setNotification(`Added a new blog: "${blog.title}" by "${blog.author}" `) ;
-        setTimeout(() => {setNotification(null)}, 5000);
+      setNotification(`Added a new blog: "${blog.title}" by "${blog.author}" `)
+      setRefreshBlog(!refreshBlog)
+      setTimeout(() => {setNotification(null)}, 5000)
     } catch (exception) {
       console.log('exception', exception)
       setErrorMessage('Error dding new blog')
@@ -80,7 +82,7 @@ const App = () => {
 
   const Notification = ({ message }) => {
     if (message === null) {
-      return null;
+      return null
     }
     return (
       <div className='notification'>
@@ -91,7 +93,7 @@ const App = () => {
 
   const ErrorMessage = ({ message }) => {
     if (message === null) {
-      return null;
+      return null
     }
     return (
       <div className='error'>
@@ -104,34 +106,34 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-            <ErrorMessage message={errorMessage}/>
-            <LoginForm handleLogin={handleLogin}/>
+        <ErrorMessage message={errorMessage}/>
+        <LoginForm handleLogin={handleLogin}/>
       </div>
     )
   }
 
   const handleUpdateBlog = async (id, updatedBlog) => {
-  try {
-    const response = await blogService.update(id, updatedBlog);
-
-    setBlogs(
-      blogs.map((blog) => (blog.id === response.id ? response : blog))
-    );
-  } catch (exception) {
-    setErrorMessage("error" + exception.response.data.error);
-  }
+    try {
+      const response = await blogService.update(id, updatedBlog)
+      setRefreshBlog(!refreshBlog)
+      setBlogs(
+        blogs.map((blog) => (blog.id === response.id ? response : blog))
+      )
+    } catch (exception) {
+      setErrorMessage('error' + exception.response.data.error)
+    }
 
   }
 
   const handleDeleteBlog = async (blog) => {
     if (window.confirm(`Delete ${blog.title} by "${blog.author}" ?`)) {
-    await blogService.destroy(blog.id)
-    setNotification(`Deleted blog: "${blog.title}" by "${blog.author}" `) ;
-    setTimeout(() => {setNotification(null)}, 5000);  
-   
-    const updatedBlogs = blogs.filter((currentBlog) => currentBlog.id !== blog.id)
-    setBlogs(updatedBlogs);  
-    } 
+      await blogService.destroy(blog.id)
+      setNotification(`Deleted blog: "${blog.title}" by "${blog.author}" `)
+      setTimeout(() => {setNotification(null)}, 5000)
+
+      const updatedBlogs = blogs.filter((currentBlog) => currentBlog.id !== blog.id)
+      setBlogs(updatedBlogs)
+    }
   }
 
   const blogForm = () => (
@@ -145,17 +147,17 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={notification} />
       <ErrorMessage message={errorMessage}/>
-      <p> 
+      <p>
         <span>{user.name} logged in</span>
         <button onClick={handleLogout}>logout</button>
       </p>
       <h2>create new blog</h2>
       <div> {blogForm()} </div>
       {blogs.sort((a, b) => b.likes - a.likes) // Sort the blogs array by likes in descending order
-      .map(blog =>
-        <Blog key={blog.id} loggedUser = {user} blog={blog} updateBlog={handleUpdateBlog} deleteBlog={handleDeleteBlog}/>
-      )}
-            
+        .map(blog =>
+          <Blog key={blog.id} loggedUser = {user} blog={blog} updateBlog={handleUpdateBlog} deleteBlog={handleDeleteBlog}/>
+        )}
+
     </div>
   )
 }

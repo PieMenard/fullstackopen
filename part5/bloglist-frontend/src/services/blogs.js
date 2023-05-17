@@ -22,7 +22,7 @@ const getAll = () => {
 }
 
 const update = async (id, newObject) => {
-  const response = await axios.put(`${baseUrl}/${id}`, newObject);
+  const response = await axios.put(`${baseUrl}/${id}`, newObject)
   return response.data
 }
 
@@ -33,6 +33,5 @@ const destroy = async (id) => {
   const request = await axios.delete(`${baseUrl}/${id}`, config)
   return request.data
 }
-  
-// eslint-disable-next-line import/no-anonymous-default-export
+
 export default { create, update, destroy, getAll, setToken }
