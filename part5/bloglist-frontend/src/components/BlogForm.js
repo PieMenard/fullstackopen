@@ -26,7 +26,7 @@ const BlogForm = ({ handleAddBlog }) => {
                 />
             </div>
             <div>
-          author
+            author
                 <input
                     type="text"
                     value={author}
@@ -35,7 +35,7 @@ const BlogForm = ({ handleAddBlog }) => {
                 />
             </div>
             <div>
-          website
+            website
                 <input
                     type="text"
                     value={url}

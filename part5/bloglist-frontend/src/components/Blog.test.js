@@ -1,6 +1,7 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 const blog = {
@@ -21,4 +22,30 @@ test('renders title and author but not likes and url by default', () => {
     expect(blogExpand).toEqual(null)
     const likesElement = screen.queryByText('likes')
     expect(likesElement).not.toBeInTheDocument()
+})
+
+test('displays URL and likes when the button is clicked', async () => {
+    //const mockHandler = jest.fn()
+
+    const blog = {
+        title: 'Test Blog',
+        author: 'Test Author',
+        url: 'https://example.com',
+        likes: 111,
+        user: {
+            username: 'test_username',
+            name: 'Test User'
+        },
+    }
+    screen.debug()
+
+    const { container } = render(<Blog blog={blog}/>)
+
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    const div = container.querySelector('.blogExpand')
+    expect(div).toHaveTextContent('https://example.com')
+    expect(div).toHaveTextContent('111')
 })
