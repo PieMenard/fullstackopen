@@ -49,3 +49,39 @@ test('displays URL and likes when the button is clicked', async () => {
     expect(div).toHaveTextContent('https://example.com')
     expect(div).toHaveTextContent('111')
 })
+
+test('calls the event handler twice when the like button is clicked twice', async () => {
+    const loggedUser = {
+        username: 'test_user',
+        name: 'Test User',
+    }
+    const blog = {
+        title: 'Test Blog',
+        author: 'Test Author',
+        url: 'https://example.com',
+        likes: 10,
+        user: loggedUser
+    }
+
+    const updateBlogMock = jest.fn()
+    const deleteBlogMock = jest.fn()
+
+    render(
+        <Blog
+            blog={blog}
+            loggedUser={loggedUser}
+            updateBlog={updateBlogMock}
+            deleteBlog={deleteBlogMock}
+        />
+    )
+    const user = userEvent.setup()
+    const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText('like')
+
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(updateBlogMock).toHaveBeenCalledTimes(2)
+})
