@@ -59,13 +59,9 @@ const App = () => {
         setUser(null)
     }
 
-    const handleAddBlog = async(title, author, url) => {
+    const handleAddBlog = async(blogObject) => {
         try {
-            const blog = await blogService.create({
-                title,
-                author,
-                url,
-            })
+            const blog = await blogService.create(blogObject)
             setBlogs(blogs.concat(blog))
             blogFormRef.current.toggleVisibility()
             setNotification(`Added a new blog: "${blog.title}" by "${blog.author}" `)
@@ -73,7 +69,7 @@ const App = () => {
             setTimeout(() => {setNotification(null)}, 5000)
         } catch (exception) {
             console.log('exception', exception)
-            setErrorMessage('Error dding new blog')
+            setErrorMessage('Error adding new blog')
             setTimeout(() => {
                 setErrorMessage(null)
             }, 5000)
@@ -138,7 +134,7 @@ const App = () => {
 
     const blogForm = () => (
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-            <BlogForm handleAddBlog={handleAddBlog} />
+            <BlogForm createBlog={handleAddBlog} />
         </Togglable>
     )
 

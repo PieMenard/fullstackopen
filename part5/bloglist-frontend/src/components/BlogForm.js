@@ -1,24 +1,28 @@
 import { useState } from 'react'
 
-const BlogForm = ({ handleAddBlog }) => {
+const BlogForm = ({ createBlog }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
 
-    const handleSubmitBlog = (event) => {
+    const addBlog = (event) => {
         event.preventDefault()
-        handleAddBlog(title, author,url)
+        createBlog({
+            title: title,
+            author: author,
+            url: url,
+        })
         setTitle('')
         setAuthor('')
         setUrl('')
     }
 
     return (
-        <form onSubmit={handleSubmitBlog}>
+        <form onSubmit={addBlog}>
             <div>
           title
-                <input
+                <input id='title-input'
                     type="text"
                     value={title}
                     name="Title"
@@ -27,7 +31,7 @@ const BlogForm = ({ handleAddBlog }) => {
             </div>
             <div>
             author
-                <input
+                <input id='author-input'
                     type="text"
                     value={author}
                     name="Author"
@@ -36,7 +40,7 @@ const BlogForm = ({ handleAddBlog }) => {
             </div>
             <div>
             website
-                <input
+                <input id='url-input'
                     type="text"
                     value={url}
                     name="URL"
