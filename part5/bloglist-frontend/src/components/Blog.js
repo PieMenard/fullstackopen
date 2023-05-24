@@ -35,7 +35,7 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
         <div style = {blogStyle} >
             <div className="blogSimple">
                 <div>
-                    {blog.title} by {blog.author}<button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
+                    {blog.title} by {blog.author}<button id='view-button' onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
                 </div>
                 <div>
                     {loggedUser && loggedUser.username === blog.user.username && (
@@ -48,7 +48,7 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
                     <div className="blogExpand">
                         <p>{blog.url}</p>
                         <p>
-                        likes {blog.likes} <button onClick={handleLike}>like</button>
+                        likes {blog.likes} <button id='like-button' onClick={handleLike}>like</button>
                         </p>
                         <p>added by user: {blog.user.name}</p>
                     </div>

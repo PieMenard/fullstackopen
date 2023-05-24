@@ -42,18 +42,24 @@ describe('Blog app', function() {
                 cy.createBlog({
                     title: 'first test blog',
                     author: 'cypress',
-                    blog_url: 'https://www.test.com/',
+                    url: 'https://www.test.com/',
                 })
                 cy.createBlog({
                     title: 'second test blog',
                     author: 'cypress',
-                    blog_url: 'https://www.test.com/',
+                    url: 'https://www.test.com/',
                 })
                 cy.createBlog({
                     title: 'third test blog',
                     author: 'cypress',
-                    blog_url: 'https://www.test.com/',
+                    url: 'https://www.test.com/',
                 })
+            })
+            it.only('user can like a blog', function() {
+                cy.contains('first test blog').parent().get('#view-button').click()
+                cy.contains('likes 0')
+                cy.get('#like-button').click()
+                cy.contains('likes 1')
             })
         })
 
