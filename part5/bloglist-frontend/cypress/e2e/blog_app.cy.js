@@ -2,12 +2,18 @@ describe('Blog app', function() {
     beforeEach(function() {
         cy.visit('')
         cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
-        const user = {
-            name: 'Cy Test User',
-            username: 'cy_test_user',
+        const firstUser = {
+            name: 'First User',
+            username: 'first_user',
             password: 'test'
         }
-        cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+        const secondUser = {
+            name: 'Second User',
+            username: 'second_user',
+            password: 'test'
+        }
+        cy.request('POST', `${Cypress.env('BACKEND')}/users`, firstUser)
+        cy.request('POST', `${Cypress.env('BACKEND')}/users`, secondUser)
     })
 
     it('Login form is shown', function() {
@@ -17,15 +23,15 @@ describe('Blog app', function() {
     })
     it('user can log in', function() {
         cy.contains('login').click()
-        cy.get('#username').type('cy_test_user')
+        cy.get('#username').type('first_user')
         cy.get('#password').type('test')
         cy.get('#login-button').click()
 
-        cy.contains('Cy Test User logged in')
+        cy.contains('First User logged in')
     })
     describe('When logged in', function() {
         beforeEach(function() {
-            cy.login({ username: 'cy_test_user', password: 'test' })
+            cy.login({ username: 'first_user', password: 'test' })
 
         })
 
@@ -55,11 +61,30 @@ describe('Blog app', function() {
                     url: 'https://www.test.com/',
                 })
             })
-            it.only('user can like a blog', function() {
-                cy.contains('first test blog').parent().get('#view-button').click()
+            it('user can like a blog', function() {
+                cy.contains('first test blog').parent().find('#view-button').click()
                 cy.contains('likes 0')
-                cy.get('#like-button').click()
+                cy.contains('first test blog').parent().get('#like-button').click()
                 cy.contains('likes 1')
+            })
+
+            it('user can delete a blog', function () {
+                cy.contains('second test blog').parent().find('#delete-button').click()
+            })
+
+            it.only("user can't delete other users blogs, can delete own" , function () {
+                cy.contains('logout').click()
+                cy.get('#username').type('second_user')
+                cy.get('#password').type('test')
+                cy.get('#login-button').click()
+                cy.contains('Second User logged in')
+                cy.contains('second test blog').parent().find('#delete-button').should('not.exist')
+                cy.createBlog({
+                    title: 'blog by Second User',
+                    author: 'cypress',
+                    url: 'https://www.test.com/',
+                })
+                cy.contains('blog by Second User').parent().find('#delete-button').click()
             })
         })
 
@@ -67,7 +92,7 @@ describe('Blog app', function() {
     })
     it('login fails with wrong password', function() {
         cy.contains('login').click()
-        cy.get('#username').type('cy_test_user')
+        cy.get('#username').type('first_user')
         cy.get('#password').type('wrong')
         cy.get('#login-button').click()
 
