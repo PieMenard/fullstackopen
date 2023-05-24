@@ -1,6 +1,5 @@
 describe('Blog app', function() {
     beforeEach(function() {
-        cy.visit('')
         cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
         const firstUser = {
             name: 'First User',
@@ -14,6 +13,7 @@ describe('Blog app', function() {
         }
         cy.request('POST', `${Cypress.env('BACKEND')}/users`, firstUser)
         cy.request('POST', `${Cypress.env('BACKEND')}/users`, secondUser)
+        cy.visit('')
     })
 
     it('Login form is shown', function() {
@@ -72,7 +72,7 @@ describe('Blog app', function() {
                 cy.contains('second test blog').parent().find('#delete-button').click()
             })
 
-            it.only("user can't delete other users blogs, can delete own" , function () {
+            it("user can't delete other users blogs, can delete own" , function () {
                 cy.contains('logout').click()
                 cy.get('#username').type('second_user')
                 cy.get('#password').type('test')
@@ -85,6 +85,27 @@ describe('Blog app', function() {
                     url: 'https://www.test.com/',
                 })
                 cy.contains('blog by Second User').parent().find('#delete-button').click()
+            })
+            it('blogs are ordered by likes', function () {
+                cy.createBlog({
+                    title: 'blog with most likes',
+                    author: 'cypress',
+                    url: 'https://www.test.com/',
+                })
+                cy.contains('blog with most likes').parent().find('#view-button').click()
+                cy.contains('blog with most likes').parent().get('#like-button').click()
+                cy.createBlog({
+                    title: 'blog with second most likes',
+                    author: 'cypress',
+                    url: 'https://www.test.com/',
+                })
+                cy.contains('blog with second most likes').parent().find('#view-button').click()
+                cy.contains('blog with second most likes').parent().get('#like-button').click()
+                cy.contains('blog with most likes').parent().find('#view-button').click()
+                cy.contains('blog with most likes').parent().get('#like-button').click()
+
+                cy.get('.blog').eq(0).should('contain', 'blog with most likes')
+                cy.get('.blog').eq(1).should('contain', 'blog with second most likes')
             })
         })
 
@@ -101,6 +122,6 @@ describe('Blog app', function() {
             .and('have.css', 'color', 'rgb(255, 0, 0)')
             .and('have.css', 'border-style', 'solid')
 
-        cy.get('html').should('not.contain', 'Cy Test User logged in')
+        cy.get('html').should('not.contain', 'First User logged in')
     })
 })
