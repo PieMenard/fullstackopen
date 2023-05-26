@@ -37,6 +37,7 @@
     ]
   },
   "devDependencies": {
-    "deep-freeze": "^0.0.1"
+    "deep-freeze": "^0.0.1",
+    "jest": "^27.5.1"
   }
 }
