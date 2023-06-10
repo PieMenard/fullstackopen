@@ -1,0 +1,46 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom hooks are awesome"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "it works!",
+      "id": 3
+    },
+    {
+      "content": "it still works!",
+      "id": 4
+    },
+    {
+      "content": "taomfoaga",
+      "id": 5
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "Matti Luukkainen",
+      "number": "040-12344565"
+    },
+    {
+      "id": 2,
+      "name": "Tarja Halonen",
+      "number": "040-2223334"
+    },
+    {
+      "name": "working",
+      "number": "464564154",
+      "id": 3
+    },
+    {
+      "name": "now what",
+      "number": "this",
+      "id": 4
+    }
+  ]
+}
