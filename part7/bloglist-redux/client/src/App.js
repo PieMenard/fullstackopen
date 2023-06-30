@@ -1,26 +1,19 @@
-import { useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect} from "react";
+import { useDispatch } from "react-redux";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
-import BlogForm from "./components/BlogForm";
-import Togglable from "./components/Togglable";
+
 import Notification from './components/Notification'
 import { setNotification } from './reducers/notificationReducer'
-import { setBlogs } from "./reducers/blogReducer";
+
 import BlogList from "./components/BlogList";
 
 const App = () => {
-  const blogs = useSelector((state) => state.blogs);
-  const [user, setUser] = useState(null)
-  const blogFormRef = useRef();
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      dispatch(setBlogs(blogs)); // Dispatch the setBlogs action with the fetched blogs
-    });
-  }, [dispatch]);
+  const [user, setUser] = useState(null)
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -54,42 +47,6 @@ const App = () => {
     dispatch(setUser(null));
   };
 
-  const handleAddBlog = async (blogObject) => {
-    try {
-      const blog = await blogService.create(blogObject);
-      dispatch(setBlogs(blogs.concat(blog)));
-      blogFormRef.current.toggleVisibility();
-      dispatch(setNotification(`Added a new blog: "${blog.title}" by "${blog.author}" `, 5));
-    } catch (exception) {
-      console.log("exception", exception);
-      dispatch(setNotification("Error adding new blog", 5));
-    }
-  };
-
-  const handleUpdateBlog = async (id, updatedBlog) => {
-    try {
-      const response = await blogService.update(id, updatedBlog);
-      dispatch(setBlogs(blogs.map((blog) => (blog.id === response.id ? response : blog))));
-    } catch (exception) {
-      dispatch(setNotification("error" + exception.response.data.error, 5));
-    }
-  };
-
-  const handleDeleteBlog = async (blog) => {
-    if (window.confirm(`Delete ${blog.title} by "${blog.author}" ?`)) {
-      await blogService.destroy(blog.id);
-      dispatch(setNotification(`Deleted blog: "${blog.title}" by "${blog.author}" `, 5));
-
-      const updatedBlogs = blogs.filter((currentBlog) => currentBlog.id !== blog.id);
-      dispatch(setBlogs(updatedBlogs));
-    }
-  };
-
-  const blogForm = () => (
-    <Togglable buttonLabel="new blog" ref={blogFormRef}>
-      <BlogForm createBlog={handleAddBlog} />
-    </Togglable>
-  );
 
   if (user === null) {
     return (
@@ -108,8 +65,6 @@ const App = () => {
         <span>{user.name} logged in</span>
         <button onClick={handleLogout}>logout</button>
       </p>
-      <h2>create new blog</h2>
-      <div>{blogForm()}</div>
       <BlogList/>
     </div>
   );

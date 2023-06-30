@@ -5,54 +5,52 @@ const blogSlice = createSlice({
   name: 'blog',
   initialState: [],
   reducers: {
-    voteBlog(state, action){
-      const id = action.payload.id
-
-      const blogToChange = action.payload
-
-      return state.map(blog =>
-        blog.id !== id ? blog : blogToChange
-      )
+    set: (state, action) => {
+      return action.payload;
     },
-    appendBlog(state, action){
-      state.push(action.payload)
+    append: (state, action) => {
+      return [...state, action.payload];
     },
-    setBlogs: (state, action) => {
-      return action.payload
+    update: (state, action) => {
+      return state.map((blog) =>
+        blog.id === action.payload.id ? action.payload : blog
+      );
     },
-    deleteBlog(state, action){
-      state.filter((blog) => blog.id !== action.payload.id)
-    }
-  }
+    remove: (state, action) => {
+      return state.filter((blog) => blog.id !== action.payload);
+    },
+  },
 })
 
-export const { appendBlog, setBlogs,/* voteBlog, deleteBlog*/ } = blogSlice.actions
+export const { append, set, update, remove } = blogSlice.actions
 
+export const initializeBlogs = () => {
+  return async dispatch => {
+    const blogs = await blogService.getAll()
+    const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+    dispatch(set(sortedBlogs))
+  }
+}
 
-export const createBlogs = content => {
+export const createBlog = content => {
   return async dispatch => {
     const newBlog = await blogService.create(content)
-    dispatch(appendBlog(newBlog))
+    dispatch(append(newBlog))
   }
 }
 
-/*export const addLikes = blog => {
-  return async dispatch => {
-    const updatedBlog = await blogService.update({
-      ...blog,
-      likes: blog.likes + 1
-    })
-    dispatch(voteBlog(updatedBlog))
+export const likeBlog = (id, newObject) => {
+  return async (dispatch) => {
+    const likedBlog = await blogService.update(id, newObject);
+    dispatch(update(likedBlog));
+  };
+};
 
-  }
-}
+export const removeBlog = (id) => {
+  return async (dispatch) => {
+    await blogService.destroy(id);
+    dispatch(remove(id));
+  };
+};
 
-/*export const deleteBlogs = id => {
-  return async dispatch => {
-    const newBlog = await blogService.remove(id)
-    dispatch(deleteBlog(newBlog))
-
-  }
-}
-*/
 export default blogSlice.reducer

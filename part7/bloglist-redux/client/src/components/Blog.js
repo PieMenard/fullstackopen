@@ -1,27 +1,35 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
+import { likeBlog, removeBlog } from "../reducers/blogReducer";
+import { setNotification } from "../reducers/notificationReducer";
+
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => {
     setVisible(!visible);
   };
 
-  const handleDelete = () => {
-    deleteBlog(blog);
-  };
-
   const handleLike = () => {
-    const updatedBlog = {
+    const newObject = {
       title: blog.title,
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1,
-      user: blog.user.id,
     };
-    updateBlog(blog.id, updatedBlog);
+
+    dispatch(likeBlog(blog.id, newObject));
+    dispatch(setNotification(`liked blog ${blog.title} by ${blog.author}`));
   };
 
+  const handleRemove = () => {
+    if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
+      dispatch(removeBlog(blog.id));
+      dispatch(setNotification(`removed blog ${blog.title} by ${blog.author}`));
+    }
+  };
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -40,11 +48,11 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
           </button>
         </div>
         <div>
-          {loggedUser && loggedUser.username === blog.user.username && (
-            <button id="delete-button" onClick={() => handleDelete()}>
+          {/*loggedUser && loggedUser.username === blog.user.username && (*/
+            <button id="delete-button" onClick={() => handleRemove(blog)}>
               delete
             </button>
-          )}
+          }
         </div>
       </div>
       {visible && (
@@ -53,7 +61,7 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
             <p>{blog.url}</p>
             <p>
               likes {blog.likes}{" "}
-              <button id="like-button" onClick={handleLike}>
+              <button id="like-button" onClick={()=> handleLike(blog)}>
                 like
               </button>
             </p>
