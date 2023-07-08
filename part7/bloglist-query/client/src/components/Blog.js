@@ -1,26 +1,63 @@
 import { useState } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+import { useNotificationDispatch } from '../NotificationContext'
+import { updateLike, deleteBlog } from '../requests'
+import { useUserValue } from '../userContext'
 
-const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
+const Blog = (({ blog }) => {
+    const queryClient = useQueryClient()
+
+    const user = useUserValue()
+
+    const dispatch = useNotificationDispatch()
+    
     const [visible, setVisible] = useState(false)
 
     const toggleVisibility = () => {
         setVisible(!visible)
     }
 
-    const handleDelete = () => {
-
-        deleteBlog(blog)
+    const addLikeMutation = useMutation(updateLike, {
+        onSuccess: (updatedLike) => {
+          console.log('update', updatedLike)
+    
+          const blogs = queryClient.getQueryData('blogs')
+    
+          queryClient.setQueryData('blogs', blogs.map(blog =>
+            blog.id === updatedLike.id ? updatedLike : blog
+          ))
+        }
+    })
+    
+    const handleLike = async (blog) => {
+        addLikeMutation.mutate({ ...blog, likes: blog.likes + 1 })
+    
+        await dispatch({ type: 'showNotification', payload: `You add one like for: ${blog.title} !` })
+    
+        setTimeout(() => {
+          dispatch({ type: 'hideNotification' })
+        }, 5000)
     }
 
-    const handleLike = () => {
-        const updatedBlog = {
-            title: blog.title,
-            author: blog.author,
-            url: blog.url,
-            likes: blog.likes + 1,
-            user: blog.user.id,
+    const deleteMutation = useMutation(deleteBlog, {
+        onSuccess: (deletedBlog) => {
+            const blogs = queryClient.getQueryData('blogs')
+
+            queryClient.setQueryData('blogs', blogs.filter(blog =>
+            blog.id !== deletedBlog.id
+            ))
         }
-        updateBlog(blog.id, updatedBlog)
+    })
+
+    const handleDelete = async (blog) => {
+        if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+            deleteMutation.mutate(blog)
+        }
+        await dispatch({ type: 'showNotification', payload: `You deleted: ${blog.title} !` })
+
+        setTimeout(() => {
+            dispatch({ type: 'hideNotification' })
+        }, 5000)
     }
 
     const blogStyle = {
@@ -31,6 +68,8 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
         marginBottom: 5
     }
 
+    const showDelete = blog.user.username === user.username ? true : false
+    
     return (
         <div style = {blogStyle} className='blog'>
             <div className="blogSimple">
@@ -38,8 +77,8 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
                     {blog.title} by {blog.author}<button id='view-button' onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
                 </div>
                 <div>
-                    {loggedUser && loggedUser.username === blog.user.username && (
-                        <button id='delete-button' onClick={() => handleDelete()}>delete</button>
+                    {showDelete && (
+                        <button id='delete-button' onClick={() => handleDelete(blog)}>delete</button>
                     )}
                 </div>
             </div>
@@ -48,7 +87,7 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
                     <div className="blogExpand">
                         <p>{blog.url}</p>
                         <p>
-                        likes {blog.likes} <button id='like-button' onClick={handleLike}>like</button>
+                        likes {blog.likes} <button id='like-button' onClick={() => handleLike(blog)}>like</button>
                         </p>
                         <p>added by user: {blog.user.name}</p>
                     </div>
@@ -56,6 +95,6 @@ const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
             )}
         </div>
     )
-}
+})
 
 export default Blog

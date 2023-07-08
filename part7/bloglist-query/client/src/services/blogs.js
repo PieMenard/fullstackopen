@@ -1,4 +1,4 @@
-import axios from 'axios'
+/*import axios from 'axios'
 const baseUrl = '/api/blogs'
 
 let token = null
@@ -34,4 +34,4 @@ const destroy = async (id) => {
     return request.data
 }
 
-export default { create, update, destroy, getAll, setToken }
+export default { create, update, destroy, getAll, setToken }*/
