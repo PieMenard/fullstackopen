@@ -40,12 +40,8 @@ const Blog = (({ blog }) => {
     }
 
     const deleteMutation = useMutation(deleteBlog, {
-        onSuccess: (deletedBlog) => {
-            const blogs = queryClient.getQueryData('blogs')
-
-            queryClient.setQueryData('blogs', blogs.filter(blog =>
-            blog.id !== deletedBlog.id
-            ))
+        onSuccess: () => {
+            queryClient.invalidateQueries('blogs');
         }
     })
 
@@ -68,7 +64,7 @@ const Blog = (({ blog }) => {
         marginBottom: 5
     }
 
-    const showDelete = blog.user.username === user.username ? true : false
+    const showDelete = blog.user && user && blog.user.username === user.username;
     
     return (
         <div style = {blogStyle} className='blog'>
