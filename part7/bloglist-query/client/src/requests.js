@@ -13,6 +13,11 @@ export const getBlogs = async () => {
   return response.data
 }
 
+export const getUsers = async () => {
+  const response = await axios.get('/api/users')
+  return response.data
+}
+
 export const createBlog = async (newBlog) => {
   const config = {
     headers: { Authorization: token },
