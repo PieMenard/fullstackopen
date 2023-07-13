@@ -1,8 +1,8 @@
-
 import { useQuery} from 'react-query';
 import { getUsers } from '../requests';
+import { Link } from 'react-router-dom';
 
-const UserDisplay = () => {
+const UserList = () => {
     const result = useQuery('users', getUsers, {retry:false})
 
     if ( result.isLoading ) {
@@ -14,9 +14,6 @@ const UserDisplay = () => {
     }
 
     const users = result.data
-
-
-  console.log('display', users)
 
   return (
     <div>
@@ -31,7 +28,9 @@ const UserDisplay = () => {
         <tbody>
           {users?.map((user) => (
             <tr key={user.id}>
-              <td>{user.name}</td>
+               <td>
+                <Link to={user.id}>{user.name}</Link>
+              </td>
               <td>{user.blogs?.length ?? 0}</td>
             </tr>
           ))}
@@ -41,4 +40,4 @@ const UserDisplay = () => {
   )
 }
 
-export default UserDisplay
+export default UserList

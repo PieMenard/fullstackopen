@@ -52,14 +52,14 @@ const LoginForm = () => {
 
     const onSubmit = (event) => {
         event.preventDefault()
-        handleLogin(username, password)
+        handleLogin(event)
         setUsername('')
         setPassword('')
     }
 
     const handleLogout = async () => {
         window.localStorage.clear()
-        setToken(null)
+        userDispatch({ type: 'clearUser' })
     }
 
     LoginForm.propTypes = {

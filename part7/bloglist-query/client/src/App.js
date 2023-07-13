@@ -1,18 +1,22 @@
 
 import BlogList from './components/BlogList'
-
+import { Routes, Route } from 'react-router-dom';
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
-import UserDisplay from './components/UserDisplay'
+import UserList from './components/UserList'
+import User from './components/User';
 
 const App = () => {  
     return (
         <div>
             <h2>blogs</h2>
             <Notification />
-            <UserDisplay />
             <LoginForm/>
-            <BlogList blogs/>
+            <Routes>
+              <Route path="/" element={<BlogList blogs/>}></Route>
+              <Route path="/users" element={<UserList />}></Route>
+              <Route path="/users/:id" element={<User />}></Route>
+            </Routes>
 
         </div>
     )

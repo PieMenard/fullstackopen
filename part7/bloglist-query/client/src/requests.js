@@ -45,3 +45,13 @@ export const login = async (credentials) => {
   const response = await axios.post('/api/login', credentials)
   return response.data
 }
+
+export const getUser = async (id) => {
+  const response = await axios.get(`/api/users/${id}`)
+  return response.data
+};
+
+export const getUserBlogs = async (id) => {
+    const response = await axios.get(`/api/users/${id}/blogs`); // Replace with your API endpoint
+    return response.data
+};
