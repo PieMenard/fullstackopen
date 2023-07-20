@@ -1,22 +1,22 @@
-import { useState } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient, useQuery } from 'react-query'
 import { useNotificationDispatch } from '../NotificationContext'
 import { updateLike, deleteBlog } from '../requests'
 import { useUserValue } from '../userContext'
+import { useNavigate, useParams } from 'react-router-dom';
+import { getBlogs } from '../requests'
 
-const Blog = (({ blog }) => {
+const Blog = () => {
+    const { id } = useParams();
+    const result = useQuery('blogs', getBlogs, {retry:false})
+    const blogs = result.data
+    const blog = blogs.find(n => n.id === String(id))
     const queryClient = useQueryClient()
+    const navigate = useNavigate();
 
     const user = useUserValue()
 
     const dispatch = useNotificationDispatch()
     
-    const [visible, setVisible] = useState(false)
-
-    const toggleVisibility = () => {
-        setVisible(!visible)
-    }
-
     const addLikeMutation = useMutation(updateLike, {
         onSuccess: (updatedLike) => {
           console.log('update', updatedLike)
@@ -54,6 +54,7 @@ const Blog = (({ blog }) => {
         setTimeout(() => {
             dispatch({ type: 'hideNotification' })
         }, 5000)
+         navigate('/');
     }
 
     const blogStyle = {
@@ -65,32 +66,23 @@ const Blog = (({ blog }) => {
     }
 
     const showDelete = blog.user && user && blog.user.username === user.username;
-    
+   
     return (
         <div style = {blogStyle} className='blog'>
-            <div className="blogSimple">
                 <div>
-                    {blog.title} by {blog.author}<button id='view-button' onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
-                </div>
-                <div>
+                    <h3>{blog.title}</h3>
+                    <p>by: {blog.author}</p>
+                    <p>url: {blog.url}</p>
+                    <p>
+                    likes {blog.likes} <button id='like-button' onClick={() => handleLike(blog)}>like</button>
+                    </p>
+                    <p>added by user: {blog.user.name}</p>
                     {showDelete && (
                         <button id='delete-button' onClick={() => handleDelete(blog)}>delete</button>
                     )}
                 </div>
-            </div>
-            {visible && (
-                <div>
-                    <div className="blogExpand">
-                        <p>{blog.url}</p>
-                        <p>
-                        likes {blog.likes} <button id='like-button' onClick={() => handleLike(blog)}>like</button>
-                        </p>
-                        <p>added by user: {blog.user.name}</p>
-                    </div>
-                </div>
-            )}
         </div>
     )
-})
+}
 
 export default Blog

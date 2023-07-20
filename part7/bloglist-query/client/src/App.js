@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import UserList from './components/UserList'
 import User from './components/User';
+import Blog from './components/Blog';
 
 const App = () => {  
     return (
@@ -14,6 +15,7 @@ const App = () => {
             <LoginForm/>
             <Routes>
               <Route path="/" element={<BlogList blogs/>}></Route>
+              <Route path="/blogs/:id" element={<Blog />}></Route>
               <Route path="/users" element={<UserList />}></Route>
               <Route path="/users/:id" element={<User />}></Route>
             </Routes>
