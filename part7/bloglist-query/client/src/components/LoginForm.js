@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useEffect, useContext } from 'react'
+import { useContext } from 'react'
 import PropTypes from 'prop-types'
 import UserContext from '../userContext'
 import { setToken } from '../requests'
@@ -11,17 +11,8 @@ const LoginForm = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-    const [user, userDispatch] = useContext(UserContext)
+    const [userDispatch] = useContext(UserContext)
 
-    useEffect(() => {
-        const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-        if (loggedUserJSON) {
-          const user = JSON.parse(loggedUserJSON)
-          userDispatch({ type: 'setUser', payload: user })
-          setToken(user.token)
-        }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [])
     
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -57,25 +48,11 @@ const LoginForm = () => {
         setPassword('')
     }
 
-    const handleLogout = async () => {
-        window.localStorage.clear()
-        userDispatch({ type: 'clearUser' })
-    }
-
     LoginForm.propTypes = {
         handleLogin: PropTypes.func.isRequired,
     }
 
-    if (user) {
-        return (
-          <div>
-            <p>
-              {user.name} logged in
-              <button onClick={handleLogout}>logout</button>
-            </p>
-          </div>
-        );
-      } else return (
+    return (
         <form onSubmit={onSubmit}>
             <div>
               username
