@@ -53,6 +53,24 @@ blogsRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog.toJSON());
 })
 
+blogsRouter.post("/:id/comments", async (request, response) => {
+  const { comment } = request.body;
+  const blogId = request.params.id;
+
+  const blog = await Blog.findById(blogId);
+  if (!blog) {
+    return response.status(404).json({ error: 'Blog not found' });
+  }
+
+  const newComment = {
+    content: comment,
+  };
+
+  blog.comments.push(newComment);
+  await blog.save();
+
+  response.status(201).json(newComment);
+});
 
 blogsRouter.delete('/:id', async (request, response, next) => {
   
@@ -82,7 +100,8 @@ blogsRouter.put('/:id', async (request, response, next) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: User.id
+    user: User.id,
+    comment: body.comment
   }
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })

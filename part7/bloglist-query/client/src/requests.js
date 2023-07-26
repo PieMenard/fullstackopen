@@ -55,3 +55,8 @@ export const getUserBlogs = async (id) => {
     const response = await axios.get(`/api/users/${id}/blogs`); // Replace with your API endpoint
     return response.data
 };
+
+export const addComment = async (id, comment) => {
+  const response=  await axios.post(`${baseUrl}/${id}/comments`, { comment })
+  return response.data
+}

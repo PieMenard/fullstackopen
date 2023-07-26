@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient, useQuery } from 'react-query'
 import { useNotificationDispatch } from '../NotificationContext'
-import { updateLike, deleteBlog } from '../requests'
+import { updateLike, deleteBlog/*, addComment */} from '../requests'
 import { useUserValue } from '../userContext'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getBlogs } from '../requests'
+import BlogComments from './BlogComments';
+//import { useState } from 'react';
 
 const Blog = () => {
     const { id } = useParams();
@@ -12,6 +14,9 @@ const Blog = () => {
     const blog = blogs.find(n => n.id === String(id))
     const queryClient = useQueryClient()
     const navigate = useNavigate();
+    //const [commentContent, setCommentContent] = useState('');
+
+    
 
     const user = useUserValue()
 
@@ -28,6 +33,18 @@ const Blog = () => {
           ))
         }
     })
+
+    /*const addCommentMutation = useMutation(addComment, {
+        onSuccess: (addedComment) => {
+          console.log('update', addedComment)
+    
+          const blogs = queryClient.getQueryData('blogs')
+    
+          queryClient.setQueryData('blogs', blogs.map(blog =>
+            blog.id === addedComment ? addedComment : blog
+          ))
+        }
+    })*/
     
     const handleLike = async (blog) => {
         addLikeMutation.mutate({ ...blog, likes: blog.likes + 1 })
@@ -38,12 +55,24 @@ const Blog = () => {
           dispatch({ type: 'hideNotification' })
         }, 5000)
     }
+    /*const handleAddComment = async (blog) => {
+        addCommentMutation.mutateAsync({ blogId: blog.id, content: commentContent });
+        // Reset the comment content after adding the comment
+        setCommentContent('');
+        await dispatch({ type: 'showNotification', payload: `You added a comment on: ${blog.title} !` })
+    
+        setTimeout(() => {
+          dispatch({ type: 'hideNotification' })
+        }, 5000)
+    }*/
 
     const deleteMutation = useMutation(deleteBlog, {
         onSuccess: () => {
             queryClient.invalidateQueries('blogs');
         }
     })
+
+
 
     const handleDelete = async (blog) => {
         if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
@@ -81,6 +110,7 @@ const Blog = () => {
                         <button id='delete-button' onClick={() => handleDelete(blog)}>delete</button>
                     )}
                 </div>
+                
         </div>
     )
 }

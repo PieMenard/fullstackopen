@@ -1,13 +1,21 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsImlkIjoiNjQ1NjY2N2UyMmIwM2Y3YmY5NTczZGM1IiwiaWF0IjoxNjgzNTA1MDU3fQ.K6uEYHmQVAkvnBCUE-YjjMvSFAlxjOUFho4gBjZgSSI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsImlkIjoiNjQ1YmRiNjExN2ZjNDlhZTQzN2U5NDM2IiwiaWF0IjoxNjkwMzgzODkyfQ.tZ_5i9iwAhV60IiLPiZwVdSpg8-Ou3rnNdBTfP9i9lE
 
 {
-  "title": "ANOTHER TEST",
-  "author": "MIKE",
-  "url": "www.rip.com",
-  "likes": 900,
-  "userId": "6456667e22b03f7bf9573dc5"
+  "title": "COMMENT TESTING",
+  "author": "McComment",
+  "url": "www.test.com",
+  "likes": 1,
+  "userId": "645bdb6117fc49ae437e9436"
+}
+###
+POST http://localhost:3003/api/blogs/64c138054f0653b27ec50fcc/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMiIsImlkIjoiNjQ1YmRiNjExN2ZjNDlhZTQzN2U5NDM2IiwiaWF0IjoxNjkwMzgzODkyfQ.tZ_5i9iwAhV60IiLPiZwVdSpg8-Ou3rnNdBTfP9i9lE
+
+{
+  "comment": "2ND TEST"
 }
 
 ###
