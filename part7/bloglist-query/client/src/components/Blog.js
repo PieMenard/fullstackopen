@@ -16,8 +16,6 @@ const Blog = () => {
     const navigate = useNavigate();
     //const [commentContent, setCommentContent] = useState('');
 
-    
-
     const user = useUserValue()
 
     const dispatch = useNotificationDispatch()
@@ -98,19 +96,19 @@ const Blog = () => {
    
     return (
         <div style = {blogStyle} className='blog'>
-                <div>
-                    <h3>{blog.title}</h3>
-                    <p>by: {blog.author}</p>
-                    <p>url: {blog.url}</p>
-                    <p>
-                    likes {blog.likes} <button id='like-button' onClick={() => handleLike(blog)}>like</button>
-                    </p>
-                    <p>added by user: {blog.user.name}</p>
-                    {showDelete && (
-                        <button id='delete-button' onClick={() => handleDelete(blog)}>delete</button>
-                    )}
-                </div>
-                
+            <div>
+                <h3>{blog.title}</h3>
+                <p>by: {blog.author}</p>
+                <p>url: {blog.url}</p>
+                <p>
+                likes {blog.likes} <button id='like-button' onClick={() => handleLike(blog)}>like</button>
+                </p>
+                <p>added by user: {blog.user.name}</p>
+                {showDelete && (
+                    <button id='delete-button' onClick={() => handleDelete(blog)}>delete</button>
+                )}
+            </div>  
+            <BlogComments />        
         </div>
     )
 }

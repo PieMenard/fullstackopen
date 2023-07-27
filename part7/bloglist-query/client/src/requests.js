@@ -56,6 +56,11 @@ export const getUserBlogs = async (id) => {
     return response.data
 };
 
+export const getBlog = async (id) => {
+  const response = await axios.get(`/api/blogs/${id}`)
+  return response.data
+};
+
 export const addComment = async (id, comment) => {
   const response=  await axios.post(`${baseUrl}/${id}/comments`, { comment })
   return response.data
