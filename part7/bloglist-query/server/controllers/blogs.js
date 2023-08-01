@@ -54,22 +54,26 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.post("/:id/comments", async (request, response) => {
-  const { comment } = request.body;
   const blogId = request.params.id;
+  const { content } = request.body;
 
-  const blog = await Blog.findById(blogId);
-  if (!blog) {
-    return response.status(404).json({ error: 'Blog not found' });
+  try {
+    const blog = await Blog.findById(blogId);
+    if (!blog) {
+      return response.status(404).json({ error: "Blog not found" });
+    }
+
+    // Add the new comment to the blog's comments array
+    blog.comments.push({ content });
+
+    // Save the updated blog to the database
+    await blog.save();
+
+    // Respond with the added comment
+    response.status(201).json(blog.comments[blog.comments.length - 1]);
+  } catch (error) {
+    response.status(500).json({ error: "Failed to add comment" });
   }
-
-  const newComment = {
-    content: comment,
-  };
-
-  blog.comments.push(newComment);
-  await blog.save();
-
-  response.status(201).json(newComment);
 });
 
 blogsRouter.delete('/:id', async (request, response, next) => {

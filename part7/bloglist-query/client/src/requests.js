@@ -61,7 +61,19 @@ export const getBlog = async (id) => {
   return response.data
 };
 
-export const addComment = async (id, comment) => {
-  const response=  await axios.post(`${baseUrl}/${id}/comments`, { comment })
-  return response.data
-}
+export const addComment = async (commentData) => {
+  const response = await fetch(`/api/blogs/${commentData.blogId}/comments`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ content: commentData.content }), // Make sure commentData contains both blogId and content
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to add comment');
+  }
+
+  const addedComment = await response.json();
+  return addedComment;
+};
