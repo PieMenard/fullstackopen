@@ -1,6 +1,7 @@
 import { useQuery} from 'react-query';
 import { getUsers } from '../requests';
 import { Link } from 'react-router-dom';
+import { Table } from 'react-bootstrap'
 
 const UserList = () => {
     const result = useQuery('users', getUsers, {retry:false})
@@ -18,7 +19,7 @@ const UserList = () => {
   return (
     <div>
       <h2>users</h2>
-      <table>
+      <Table striped>
         <thead>
           <tr>
             <th>name</th>
@@ -35,7 +36,7 @@ const UserList = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   )
 }

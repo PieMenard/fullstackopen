@@ -9,7 +9,7 @@ import NavigationBar from './components/NavigationBar';
 
 const App = () => {  
     return (
-        <div>
+        <div className="container">
             <NavigationBar/>
             <h2>Blogs App</h2>
             <Notification />

@@ -1,11 +1,11 @@
 import React from "react";
-
 import Togglable from "./Togglable";
 import BlogForm from "./BlogForm";
 import { getBlogs} from '../requests';
 import { useQuery} from 'react-query';
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { Table } from "react-bootstrap";
 
 const BlogList = () => {
 
@@ -26,15 +26,21 @@ const BlogList = () => {
         <Togglable buttonLabel='new blog'>
             <BlogForm/>
         </Togglable>
-        {blogs
-        .slice()
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog, index, { length }) => (
-          <Fragment key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-            {index !== length - 1 && <hr />}
-          </Fragment>
-        ))}
+        <Table striped>
+            <tbody>
+                {blogs
+                .slice()
+                .sort((a, b) => b.likes - a.likes)
+                .map((blog, index, { length }) => (
+                <tr>
+                <Fragment key={blog.id}>
+                <td><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></td>
+                    {index !== length - 1 && <hr />}
+                </Fragment>
+                </tr>
+                ))}
+            </tbody>
+        </Table>
         </div>
     );
 };
