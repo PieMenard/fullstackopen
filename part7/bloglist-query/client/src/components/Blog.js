@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getBlogs, addComment } from '../requests'
 import BlogComments from './BlogComments';
 import { useState } from 'react';
+import { Form, Button, Card, ListGroup, ListGroupItem } from 'react-bootstrap'
 
 const Blog = () => {
     const { id } = useParams();
@@ -90,39 +91,49 @@ const Blog = () => {
          navigate('/');
     }
 
-    const blogStyle = {
-        paddingTop: 10,
-        paddingLeft: 2,
-        border: 'solid',
-        borderWidth: 1,
-        marginBottom: 5
-    }
-
     const showDelete = blog.user && user && blog.user.username === user.username;
    
     return (
-        <div style = {blogStyle} className='blog'>
+        <div >
             <div>
-                <h3>{blog.title}</h3>
-                <p>by: {blog.author}</p>
-                <p>url: {blog.url}</p>
-                <p>
-                likes {blog.likes} <button id='like-button' onClick={() => handleLike(blog)}>like</button>
-                </p>
-                <p>added by user: {blog.user.name}</p>
-                {showDelete && (
-                    <button id='delete-button' onClick={() => handleDelete(blog)}>delete</button>
-                )}
+            <Card>
+              <Card.Body>
+                <Card.Title>{blog.title}</Card.Title>
+                <Card.Subtitle className='mb-2 text-muted'>by: {blog.author}</Card.Subtitle>
+                <ListGroup>
+                  <ListGroupItem>URL: {blog.url}</ListGroupItem>
+                  <ListGroupItem>
+                    Likes {blog.likes}{' '}
+                    <Button id='like-button' variant="outline-success" size="sm" onClick={() => handleLike(blog)}>
+                      Like
+                    </Button>
+                  </ListGroupItem>
+                  <ListGroupItem>Added by user: {blog.user.name}</ListGroupItem>
+                </ListGroup>
+              </Card.Body>
+            </Card>
+            {showDelete && (
+                <Button 
+                  id='delete-button' 
+                  onClick={() => handleDelete(blog)}
+                  variant="danger"
+                  size="sm">
+                  delete blog
+                </Button>
+            )}
             </div>  
-            <form onSubmit={handleAddComment}>
-                <input
+            <Form onSubmit={handleAddComment}>
+              <Form.Control
                 type='text'
                 name='comment'
+                placeholder="Add a comment here"
                 value={commentContent}
                 onChange={(e) => setCommentContent(e.target.value)}
-                />
-                <button type='submit'>add comment</button>
-            </form>
+              />
+              <Button type='submit' variant='primary' size='sm'>
+                submit comment
+              </Button>
+            </Form>
             <BlogComments />        
         </div>
     )

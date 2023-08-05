@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query'
 import { createBlog } from '../requests'
 import { useNotificationDispatch } from "../NotificationContext"
+import { Button, Form } from 'react-bootstrap'
 
 const BlogForm = () => {
 
@@ -38,30 +39,35 @@ const BlogForm = () => {
     }
 
     return (
-        <form onSubmit={addBlog}>
-            <div>
-                title
-                <input id='title-input'
+        <Form onSubmit={addBlog}>
+            <Form.Group>
+          <Form.Label className="mt-2">Title:</Form.Label>
+          <Form.Control
                     type="text"
                     name="title"
                 />
-            </div>
-            <div>
-                author
-                    <input id='author-input'
+
+            <Form.Label className="mt-2">Author:</Form.Label>
+            <Form.Control id='author-input'
                         type="text"
                         name="author"
                     />
-            </div>
-            <div>
-                website
-                    <input id='url-input'
+
+            <Form.Label className="mt-2">Url:</Form.Label>
+                    <Form.Control
+                    id='url-input'
                         type="text"
                         name="url"
                     />
-            </div>
-            <button type="submit">submit</button>
-        </form>
+            </Form.Group>
+            <Button 
+                type="submit"
+                variant="success"
+                id="create"
+                className="justify-content-end mt-3"
+                >submit
+            </Button>
+        </Form>
     )
 }
 

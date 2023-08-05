@@ -1,20 +1,15 @@
 import { useNotificationValue } from '../NotificationContext'
+import Alert from 'react-bootstrap/Alert'
 
 const Notification = () => {
     const notification = useNotificationValue()
 
-    const style = {
-      border: 'solid',
-      padding: 10,
-      borderWidth: 1
-    }
-
     if (notification === '') return null
     
     return (
-      <div style={style}>
+      <Alert key={'success'} variant={'success'}>
         {notification}
-      </div>
+      </Alert>
     )
   }
   

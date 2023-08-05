@@ -26,16 +26,16 @@ const BlogList = () => {
         <Togglable buttonLabel='new blog'>
             <BlogForm/>
         </Togglable>
-        <Table striped>
+        <Table striped bordered hover>
             <tbody>
                 {blogs
                 .slice()
                 .sort((a, b) => b.likes - a.likes)
                 .map((blog, index, { length }) => (
-                <tr>
-                <Fragment key={blog.id}>
+                <tr key={blog.id}>
+                <Fragment >
                 <td><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></td>
-                    {index !== length - 1 && <hr />}
+                    {index !== length - 1 }
                 </Fragment>
                 </tr>
                 ))}
@@ -44,5 +44,7 @@ const BlogList = () => {
         </div>
     );
 };
+
+
 
 export default BlogList;

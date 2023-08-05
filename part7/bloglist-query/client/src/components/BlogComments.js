@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { getBlog } from '../requests';
+import ListGroup from 'react-bootstrap/ListGroup'
 
 const BlogComments = () => {
   const { id } = useParams();
@@ -21,12 +22,12 @@ const BlogComments = () => {
 
   return (
     <>
-      <h3>comments</h3>
-      <ul>
+      <h5>comments:</h5>
+      <ListGroup variant="flush">
         {comments.map((comment, index) => (
-          <li key={index}>{comment.content}</li>
+          <ListGroup.Item key={index}>{comment.content}</ListGroup.Item>
         ))}
-      </ul>
+      </ListGroup>
       {!comments.length && <p>no comments to display</p>}
     </>
   );
